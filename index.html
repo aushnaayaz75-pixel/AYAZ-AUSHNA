@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern BMI Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+   body {
+        font-family: 'Poppins', sans-serif;
+        background: url("https://thumbs.dreamstime.com/b/abstract-aesthetic-pastel-background-texture-design-colorful-gradient-use-303918154.jpg") no-repeat center/cover;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    
+    .card {
+        width: 360px;
+        padding: 25px;
+        background: transparent;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        color:black;
+        position: relative;
+        animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color:darkgreen;
+        text-shadow: 0 0 10px lightseagreen;
+    }
+
+    input {
+        width: 90%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 12px;
+        border: 1px solid darkgreen;
+        outline: none;
+        font-size: 16px;
+        text-align: center;
+        background: rgba(255,255,255,0.3);
+        color: black;
+        transition: 0.3s;
+    }
+
+    input:focus {
+        box-shadow: 0 0 10px lightseagreen;
+        background: rgba(255,255,255,0.45);
+    }
+
+    .gender-box {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 18px;
+        gap: 10px;
+    }
+
+    .gender {
+        flex: 1;
+        padding: 14px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.25);
+        cursor: pointer;
+        font-weight: 500;
+        text-align: center;
+        border: 1px solid darkgreen;
+        transition: 0.3s;
+    }
+
+    .gender:hover {
+        background: lightseagreen;
+    }
+
+    .active {
+        background: lightseagreen;
+        color: black;
+        font-weight: 600;
+        border-color: blue;
+        box-shadow: 0 0 10px #0affd1;
+        transform: scale(1.04);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 20px;
+        font-size: 18px;
+        color: black;
+        border: none;
+        cursor: pointer;
+        border-radius: 12px;
+        background: linear-gradient(135deg, lightcyan,lightseagreen);
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 20px lightseagreen;
+    }
+
+    .bmi-output {
+        margin-top: 22px;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+        color:darkgreen;
+        text-shadow: 0 0 10px lightseagreen;
+    }
+
+    .suggest {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    @media(max-width: 500px) {
+        .card { width: 90%; }
+        h2 { font-size: 24px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>BMI Calculator</h2>
+
+    <input type="number" id="age" placeholder="Enter Age">
+
+    <div class="gender-box">
+        <div class="gender" id="male">♂ Male</div>
+        <div class="gender" id="female">♀ Female</div>
+    </div>
+
+    <input type="number" id="height" placeholder="Height (Feet)" min="1" max="7">
+    <input type="number" id="weight" placeholder="Weight (Kg)" min="1">
+
+    <button id="calcBtn">Calculate BMI</button>
+
+    <div class="bmi-output" id="result">Your BMI: 00.00</div>
+    <div class="suggest" id="suggestion"></div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+     $(".gender").click(function(){
+    $(".gender").removeClass("active");
+    $(this).addClass("active");
+});
+
+// Prevent negative input while typing
+$("#age, #height, #weight").on("input", function() {
+    if ($(this).val() < 1) {
+        $(this).val('');
+    }
+});
+
+$("#calcBtn").click(function(){
+    let age = $("#age").val();
+    let h = $("#height").val();
+    let w = $("#weight").val();
+
+    // Validation
+    if(age <= 0 || age === ""){
+        alert("Age cannot be negative or zero!");
+        return;
+    }
+    if(h <= 0 || h > 7 || h === ""){
+        alert("Height must be between 1 to 7 feet!");
+        return;
+    }
+    if(w <= 0 || w === ""){
+        alert("Weight must be greater than 0!");
+        return;
+    }
+
+    // BMI Calculation
+    let heightM = h * 0.3048;
+    let bmi = w / (heightM * heightM);
+
+    $("#result").text("Your BMI: " + bmi.toFixed(2));
+
+    let text = "";
+    if(bmi < 18.5){
+        text = "Underweight — Increase healthy calories & light strength training.";
+    } else if(bmi < 24.9){
+        text = "Normal — Excellent! Maintain with balanced diet & exercise.";
+    } else if(bmi < 29.9){
+        text = "Overweight — Add cardio 20–30 mins/day, reduce sugar & oily foods.";
+    } else if(bmi < 34.9){
+        text = "Obese Class 1 — Calorie deficit diet, daily walking.";
+    } else if(bmi < 39.9){
+        text = "Obese Class 2 — Structured exercise, consult nutritionist.";
+    } else {
+        text = "Obese Class 3 — High health risk! Strict diet & medical guidance.";
+    }
+
+    $("#suggestion").text(text);
+});
+
+</script>
+
+</body>
+</html>
